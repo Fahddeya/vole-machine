@@ -1,0 +1,94 @@
+class Register{
+  string reg;
+  Register(){}
+  display(){}
+  
+}
+class Memory{
+  vector<string> mem;
+  
+  Memory(){}
+  void readfile(){}
+  string get(int pc){}
+  void display(){}
+}
+class Instructionregister{
+  string IR;
+
+  void set(string value){}
+  string get(){}
+}
+
+class Machine{
+  Instructionregister ir; 
+  int programcounter;
+  1->1 Memory;
+  1->16 Register;
+
+  void fetch(int programcounter,Memory memory                            ,Instructionregister ir){}
+    
+  void decode(Instructionregister ir){}
+  
+}
+
+class instruction{
+  abstract;
+  vertual void execute(){}
+}
+
+class instrucion1{
+  isA instruction;
+  void execute(){}
+}
+class instrucion2{
+  isA instruction;
+  void execute(){}
+}
+
+association{
+0..1 instruction ->1 Memory;
+}
+association{
+0..1 instruction ->16 Register;
+}
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class Register
+{
+  position 225 257 144.9 112.262;
+}
+
+class Memory
+{
+  position 103 51 144.038 146.262;
+}
+
+class Instructionregister
+{
+  position 23 223 148.65 112.262;
+}
+
+class Machine
+{
+  position 384 31 327.237 129.262;
+  position.association Machine__Memory 0,70 144,49;
+  position.association Machine__Register 78,129 134,0;
+}
+
+class instruction
+{
+  position 461 258 109 77.2625;
+}
+
+class instrucion1
+{
+  position 327 412 142.413 78.2625;
+}
+
+class instrucion2
+{
+  position 576 409 142.413 78.2625;
+}
