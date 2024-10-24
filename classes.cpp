@@ -49,7 +49,8 @@ public:
     }
 
     string get(int pc){
-        return mem[pc];
+        string instruction = mem[pc] +mem[pc+1];
+        return instruction;
     }
 
 };
@@ -61,7 +62,9 @@ public:
         IR = "0000";
         cout << "InstructionRegister initialized with: " << IR << "\n";
     }
-    void set(){}
+    void set(string instruction){
+        IR = instruction;
+    }
     string get(){
         return IR;
     }
@@ -93,13 +96,43 @@ public:
         cout << "Machine initialized with 16 Registers and 256 Memory blocks.\n";
     }
 
-    void fetch(int programcounter, Memory& memory, InstructionRegister& ir){
+    void fetch(int& programcounter, Memory memory, InstructionRegister ir){
         string instruction = memory.get(programcounter);
-        ir.set();
+        ir.set(instruction);
+        programcounter += 2;
     }
 
-    void decode(InstructionRegister& ir){
+    void decode(InstructionRegister ir){
         string instruction = ir.get();
+        switch(instruction[0]){
+        case '1':
+            // 1st instuction fuction
+            break;
+        case '2':
+            // 2nd instuction fuction
+            break;
+        case '3':
+            // 3rd instuction fuction
+            break;
+        case '4':
+            // 4th instuction fuction
+            break;
+        case '5':
+            // 5th instuction fuction
+            break;
+        case '6':
+            // 6th instuction fuction
+            break;
+        case 'B':
+            // 7th instuction fuction
+            break;
+        case 'c':
+            // 8th instuction fuction
+            break;
+        
+        default:
+            break;
+        }
     }
 
 };
