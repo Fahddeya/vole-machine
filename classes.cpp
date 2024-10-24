@@ -14,6 +14,12 @@ public:
             cout << reg[i] << "\n";
         }
     }
+    void set(string input,int index){
+        reg[index] = input;
+    }
+    string get(int index){
+        return reg[index];
+    }
 };
 
 class Memory{
