@@ -1,100 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class ALU{
-public:
-    int converthexatodecimal(string hex){
-        return stoi(hex,nullptr,16);
-    }
-
-    string convertdecimaltohexa(int x){
-        ostringstream con;
-        con<<hex<<uppercase<<x;
-        return con.str();
-    }
-
-
-    string convertDecimalToBinary(int decimal, int bits = 6) {
-        string binary = "";
-        while(decimal > 0) {
-            binary = to_string(decimal % 2) + binary;
-            decimal /= 2;
-        }
-        while(binary.size() < bits) {
-            binary = "0" + binary;
-        }
-        return binary;
-    }
-
-
-    string first_complement(int x, int bits) {
-        string convert = convertDecimalToBinary(-x, bits);
-        string inverted = "";
-        for(char i : convert) {
-        if(i == '0') {
-            inverted += '1';
-        } 
-        else{
-            inverted += '0';
-        }
-    }
-        return inverted;
-    }
-
-
-    string addOneToBinary(const string &binary) {
-        string result = binary;
-        int n = result.size();
-        for(int i = n - 1; i >= 0; i--){
-            if(result[i] == '0') {
-                result[i] = '1';
-                return result;
-            }
-            else{
-                result[i] = '0';
-            }
-        }
-        return "1" + result;
-    }
-
-
-    string second_complement(int x, int bits = 6) {
-        if (x >= 0) {
-            return convertDecimalToBinary(x, bits);
-        }
-        else{
-            string firstComplement = first_complement(x, bits);
-            string twoComplement = addOneToBinary(firstComplement);
-            return twoComplement;
-        }
-    }
-
-
-    int convertBinaryToDecimal( string &binary) {
-        int decimal = 0;
-        int power = 0;
-        for(int i = binary.size() - 1; i >= 0; --i) {
-            if (binary[i] == '1') {
-                decimal += pow(2, power);
-            }
-            power++;
-        }
-        return decimal;
-    }
-
-    bool isHexadecimal(const string& input){
-        for (char c : input){
-            if (!isxdigit(c)){
-                return false;
-            }
-        }
-        return !input.empty();
-    }
-};
-
-
-
-
 class Register{
 
     string reg[16];
@@ -119,7 +25,6 @@ public:
 
 class Memory{
     string mem[256];
-    ALU alu;
 public:
     Memory(){
         for(int i=0 ; i < 256;i++){
@@ -140,12 +45,9 @@ public:
 
             string word;
             int index = 0;
-            while(input >> word){
-                if(alu.isHexadecimal(word)){
-                    mem[index++] = word.substr(0,2);
-                    mem[index++] = word.substr(2,2);
-                }
-                
+            while (input >> word){
+                mem[index++] = word.substr(0,2);
+                mem[index++] = word.substr(2,2);
         }
         input.close();
     }
@@ -197,13 +99,103 @@ public:
 };
 
 
+class ALU{
+public:
+    
+};
+
+int converthexatodecimal(string hex)
+{
+    return stoi(hex,nullptr,16);
+}
+
+string convertdecimaltohexa(int x)
+{
+    ostringstream con;
+    con<<hex<<uppercase<<x;
+    return con.str();
+}
 
 
+string convertDecimalToBinary(int decimal, int bits = 6) {
 
+    string binary = "";
+    while (decimal > 0) {
+        binary = to_string(decimal % 2) + binary;
+        decimal /= 2;
+    }
+
+
+    while (binary.size() < bits) {
+        binary = "0" + binary;
+    }
+    return binary;
+}
+
+
+string first_complement(int x, int bits) {
+
+    string convert = convertDecimalToBinary(-x, bits);
+    string inverted = "";
+
+
+    for (char i : convert) {
+    if (i == '0') {
+        inverted += '1';
+    } else {
+        inverted += '0';
+    }
+}
+
+    return inverted;
+}
+
+
+string addOneToBinary(const string &binary) {
+    string result = binary;
+    int n = result.size();
+
+
+    for (int i = n - 1; i >= 0; i--) {
+        if (result[i] == '0') {
+            result[i] = '1';
+            return result;
+        } else {
+            result[i] = '0';
+        }
+    }
+    return "1" + result;
+}
+
+
+string second_complement(int x, int bits = 6) {
+    if (x >= 0) {
+        return convertDecimalToBinary(x, bits);
+    } else {
+        string firstComplement = first_complement(x, bits);
+        string twoComplement = addOneToBinary(firstComplement);
+        return twoComplement;
+    }
+}
+
+
+int convertBinaryToDecimal( string &binary) {
+    int decimal = 0;
+    int power = 0;
+
+
+    for (int i = binary.size() - 1; i >= 0; --i) {
+        if (binary[i] == '1') {
+            decimal += pow(2, power);
+        }
+        power++;
+    }
+
+    return decimal;
+}
 
 class Instruction{
 public:
-    ALU alu;
     virtual void execute(Register &regist,Memory &memo , int &programcounter , string giveninstructions) = 0;
 };
 
@@ -213,9 +205,9 @@ class Instruction1  : public Instruction{
 public:
     void execute(Register &regist,Memory &memo , int &programcounter , string giveninstructions) override
     {
-        int register_index=alu.converthexatodecimal(giveninstructions.substr(1,1));
+        int register_index=converthexatodecimal(giveninstructions.substr(1,1));
         string XY=giveninstructions.substr(2,2);
-        int memory_address=alu.converthexatodecimal(XY);
+        int memory_address=converthexatodecimal(XY);
         string loaded_value_in_register=memo.getR(memory_address);
         regist.set(loaded_value_in_register,register_index);
     }
@@ -227,7 +219,7 @@ class Instruction2 : public Instruction{
 public:
     void execute(Register &regist,Memory &memo , int &programcounter , string giveninstructions) override
     {
-        int register_index=alu.converthexatodecimal(giveninstructions.substr(1,1));
+        int register_index=converthexatodecimal(giveninstructions.substr(1,1));
         string XY=giveninstructions.substr(2,2);
         regist.set(XY,register_index);
     }
@@ -240,9 +232,9 @@ class Instruction3 : public Instruction{
 public:
     void execute(Register &regist,Memory &memo , int &programcounter , string giveninstructions) override
     {
-        int register_index=alu.converthexatodecimal(giveninstructions.substr(1,1));
+        int register_index=converthexatodecimal(giveninstructions.substr(1,1));
         string XY=giveninstructions.substr(2,2);
-         int memory_address=alu.converthexatodecimal(XY);
+         int memory_address=converthexatodecimal(XY);
          string value_stored=regist.get(register_index);
          memo.set(memory_address , value_stored);
     }
@@ -253,8 +245,8 @@ class Instruction4 : public Instruction{
 public:
     void execute(Register &regist,Memory &memo , int &programcounter , string giveninstructions) override
     {
-        int R = alu.converthexatodecimal(giveninstructions.substr(2,1));
-        int S = alu.converthexatodecimal(giveninstructions.substr(3,1));
+        int R = converthexatodecimal(giveninstructions.substr(2,1));
+        int S = converthexatodecimal(giveninstructions.substr(3,1));
         string copied_value=regist.get(R);
         regist.set(copied_value,S);
     }
@@ -266,20 +258,20 @@ class Instruction5 : public Instruction{
 public:
     void execute(Register &regist,Memory &memo , int &programcounter , string giveninstructions) override
     {
-        int R=alu.converthexatodecimal(giveninstructions.substr(1,1));
-        int S=alu.converthexatodecimal(giveninstructions.substr(2,1));
-        int T=alu.converthexatodecimal(giveninstructions.substr(3,1));
+        int R=converthexatodecimal(giveninstructions.substr(1,1));
+        int S=converthexatodecimal(giveninstructions.substr(2,1));
+        int T=converthexatodecimal(giveninstructions.substr(3,1));
 
-        int valueS = alu.converthexatodecimal(regist.get(S));
-        int valueT = alu.converthexatodecimal(regist.get(T));
+        int valueS = converthexatodecimal(regist.get(S));
+        int valueT = converthexatodecimal(regist.get(T));
 
-        string twocomplementsum=alu.second_complement(valueS+valueT);
+        string twocomplementsum=second_complement(valueS+valueT);
 
-        string tempsum= to_string(alu.convertBinaryToDecimal(twocomplementsum));
+        string tempsum= to_string(convertBinaryToDecimal(twocomplementsum));
 
         int sum=stoi(tempsum);
 
-        regist.set(alu.convertdecimaltohexa(sum),R);
+        regist.set(convertdecimaltohexa(sum),R);
 
 
     }
@@ -292,9 +284,9 @@ class Instruction6 : public Instruction{
 public:
     void execute(Register &regist,Memory &memo , int &programcounter , string giveninstructions) override
     {
-        int R = alu.converthexatodecimal(giveninstructions.substr(1,1));
-        int S = alu.converthexatodecimal(giveninstructions.substr(2,1));
-        int T = alu.converthexatodecimal(giveninstructions.substr(3,1));
+        int R = converthexatodecimal(giveninstructions.substr(1,1));
+        int S = converthexatodecimal(giveninstructions.substr(2,1));
+        int T = converthexatodecimal(giveninstructions.substr(3,1));
         float float_result=stof(regist.get(S))+stof(regist.get(T));
         regist.set(to_string(float_result),R);
     }
@@ -306,9 +298,9 @@ class InstructionBB : public Instruction{
 public:
     void execute(Register &regist,Memory &memo , int &programcounter , string giveninstructions) override
     {
-        int R=alu.converthexatodecimal(giveninstructions.substr(1,1));
+        int R=converthexatodecimal(giveninstructions.substr(1,1));
         string XY=giveninstructions.substr(2,2);
-        int memory_address=alu.converthexatodecimal(XY);
+        int memory_address=converthexatodecimal(XY);
         if(regist.get(R)==regist.get(0))
             programcounter=memory_address;
 
@@ -411,7 +403,7 @@ int main(){
     Machine mc;
     mc.Readfile();
 
-    try{
+    try {
         for (int i = 0; i < 256; i += 2) {
             mc.fetch();
             mc.decode();
