@@ -164,7 +164,7 @@ public:
     }
 
     string getR(int pc){
-        string instruction = mem[pc+1];
+        string instruction = mem[pc];
         return instruction;
     }
 
