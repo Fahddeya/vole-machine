@@ -84,12 +84,16 @@ public:
     }
 
     bool isHexadecimal(const string& input){
-        for (char c : input){
+        if(input.length() != 4){
+            return false;
+        }
+    
+        for(char c : input){
             if (!isxdigit(c)){
                 return false;
             }
         }
-        return !input.empty();
+        return true;
     }
 };
 
@@ -128,27 +132,38 @@ public:
         }
     }
 
-    void readfile(int pc){
+    bool readfile(int pc){
         string filename;
         ifstream input;
         do{
-            cout<<"Enter the filename please : ";
-            cin>>filename;
+            cout << "Enter the filename please: ";
+            cin >> filename;
             input.open(filename);
-            if(!input.is_open())
-                cout<<"Error opening the file , please enter it again :\n";
+            if(!input.is_open()){
+                cout << "Error opening the file, please enter it again :\n";
+            }
         }while(!input.is_open());
-
             string word;
-            while(input >> word){
-                if(alu.isHexadecimal(word)){
-                    mem[pc++] = word.substr(0,2);
-                    mem[pc++] = word.substr(2,2);
+            int availableSpace = 256 - pc;
+            int instructionCount = 0;
+        while(input >> word){
+            if(alu.isHexadecimal(word)){
+                if(instructionCount >= availableSpace){
+                    cout << "Error: Not enough memory to load all instructions.\n";
+                    input.close();
+                    return false;
                 }
-
+                mem[pc++] = word.substr(0, 2);
+                mem[pc++] = word.substr(2, 2);
+                instructionCount += 2;
+            }
+        } 
+            if(mem[pc-2] + mem[pc-1] != "C000"){
+                mem[pc++] = "C0";
+            }
+            input.close();
+            return true;
         }
-        input.close();
-    }
 
 
 
@@ -437,8 +452,13 @@ public:
         cout << "Machine initialized with 16 Registers and 256 Memory blocks.\n";
     }
 
-    void Readfile(int pc){
-        memory.readfile(pc);
+    bool Readfile(int pc){
+        if(memory.readfile(pc)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     //void tryregister()
@@ -524,24 +544,53 @@ public:
 };
 
 
-int main(){
+int main() {
+    cout << "Welcome to the vole machine.\n";
+    int choice;
     int pc;
-    cout << "enter the location in the memory;";
-    cin >> pc;
-    Machine mc(pc);
-    mc.Readfile(pc);
-   // mc.tryregister();
-
-    try{
-        for (int i = 0; i < 256; i += 2) {
-            mc.fetch();
-            mc.decode();
+    Machine mc(0);
+    do{
+        cout << "\nPlease choose from the following menu:\n";
+        cout << "1) Read file and load program.\n";
+        cout << "2) Execute program.\n";
+        cout << "3) Display data.\n";
+        cout << "4) Exit.\n";
+        cin >> choice;
+        while(choice < 1 || choice > 4){
+            cout << "Invalid choice, please try again.\n";
+            cin >> choice;
         }
-    } catch (const HaltException& e) {
-        cout << e.what();
-        cout<<"Exiting the program after executing "<<mc.number_of_commands_till_HALT()<<" commands\n";
-    }
+        switch(choice){
+            case 1:
+                cout << "Enter the starting location for storing data in memory (0 < location < 256):\n";
+                cin >> pc;
+                while(pc < 1 || pc > 256){
+                    cout << "Invalid choice, please try again.\n";
+                    cin >> pc;
+                }
+                mc = Machine(pc);
+                while(!mc.Readfile(pc)){
+                    cout << "Please try loading file with less number of instructions.\n";
+                }
+                break;
 
-    mc.display();
-
+            case 2:
+                try{
+                    for(int i = 0; i < 256; i += 2){
+                        mc.fetch();
+                        mc.decode();
+                    }
+                }catch(const HaltException& e){
+                    cout << e.what() << endl;
+                    cout << "Exiting after executing " << mc.number_of_commands_till_HALT() << " commands\n";
+                }
+                break;
+            case 3:
+                mc.display();
+                break;
+            case 4:
+                cout << "see you soon..\n";
+                break;
+        }
+    }while(choice != 4);
 }
