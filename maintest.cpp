@@ -17,7 +17,6 @@ int main() {
         cout << "2) Execute program.\n";
         cout << "3) Display data.\n";
         cout << "4) Exit.\n";
-        cin >> choice;
         while (true) {
             cin >> choice;
 
