@@ -60,47 +60,11 @@ You will need a C++ compiler that supports C++11 or later (due to features like 
     ```
     Then, when prompted, enter the name of your machine code file.
 
-## Running the tests
-
-Explain how to run the automated tests for this system.
-
-### Break down into end-to-end tests
-
-Explain what these tests test and why.
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why.
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system.
-
-## Built With
-
-_(This section can be used to list major libraries or tools if any are central to your project, otherwise, it can be removed if not applicable for a C++ simulation.)_
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
 
 ## Authors
 
-- **[Your Name/Handle]** - _Initial work_ - [Link to your profile if desired]
+- **[Fahd Deya]** **[fahddyaa545@gmail.com]**
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## License
 
