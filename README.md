@@ -56,7 +56,7 @@ You will need a C++ compiler that supports C++11 or later (due to features like 
 4.  **Run the simulation.**
     Execute the compiled program. It will prompt you for the name of the input file.
     ```bash
-    ./vole_simulation
+    ./vole_simulation.text
     ```
     Then, when prompted, enter the name of your machine code file.
 
